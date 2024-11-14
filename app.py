@@ -11,14 +11,13 @@ from tensorflow.keras.layers import Dense, Flatten, Dropout
 from tensorflow.keras.optimizers import Adamax
 from tensorflow.keras.metrics import Precision, Recall
 import google.generativeai as genai
-from google.colab import userdata
+# from google.colab import userdata
 import PIL.Image
 import os
-from google.colab import userdata
 from dotenv import load_dotenv
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 output_dir = 'saliency_maps'
 os.makedirs(output_dir, exist_ok=True)
