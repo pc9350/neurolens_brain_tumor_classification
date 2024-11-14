@@ -9,3 +9,4 @@ seaborn
 plotly
 scikit-learn
 python-dotenv
+google-generativeai
