@@ -22,8 +22,8 @@ genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 def download_models():
     models = {
-        'xception_model.weights.h5': 'YOUR_FILE_ID_1',
-        'cnn_model.h5': 'YOUR_FILE_ID_2'
+        'xception_model.weights.h5': '1uoFAA99IZkR-47OH_6_Laoeiv8Jot7T6',
+        'cnn_model.h5': '1ZdEE9YIXHZ16y19RxwCJlt139ZHtkNr3'
     }
     
     for model_name, file_id in models.items():

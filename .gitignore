@@ -1,1 +1,4 @@
+.env
 *.h5
+__pycache__/
+.streamlit/secrets.toml
