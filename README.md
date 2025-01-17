@@ -27,7 +27,7 @@ NeuroLens is a deep learning project designed to classify brain tumors in MRI sc
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/NeuroLens_Brain_Tumor_Classification.git
+   git clone https://github.com/pc9350/NeuroLens_Brain_Tumor_Classification.git
    cd NeuroLens_Brain_Tumor_Classification
    ```
 
