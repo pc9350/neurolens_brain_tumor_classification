@@ -196,29 +196,40 @@ def generate_saliency_map(model, img_array, class_index, img_size):
   return superimposed_img
 
 def load_xception_model(model_path):
-  img_shape=(299,299,3)
-  base_model = tf.keras.applications.Xception(include_top=False, weights="imagenet", input_shape=img_shape, pooling='max')
+    try:
+        img_shape=(299,299,3)
+        base_model = tf.keras.applications.Xception(
+            include_top=False, 
+            weights="imagenet", 
+            input_shape=img_shape, 
+            pooling='max'
+        )
 
-  model = Sequential([
-      base_model,
-      Flatten(),
-      Dropout(rate=0.3),
-      Dense(128, activation='relu'),
-      Dropout(rate=0.25),
-      Dense(4, activation='softmax')
-  ])
+        model = Sequential([
+            base_model,
+            Flatten(),
+            Dropout(rate=0.3),
+            Dense(128, activation='relu'),
+            Dropout(rate=0.25),
+            Dense(4, activation='softmax')
+        ])
 
-  model.build((None,) + img_shape)
+        model.build((None,) + img_shape)
 
-  # Compile the model
-  model.compile(Adamax(learning_rate=0.001),
-                loss='categorical_crossentropy',
-                metrics=['accuracy',
-                         Precision(), Recall()])
 
-  model.load_weights(model_path)
+        model.load_weights(model_path)
 
-  return model
+        # Compile after loading weights
+        model.compile(
+            optimizer=Adamax(learning_rate=0.001),
+            loss='categorical_crossentropy',
+            metrics=['accuracy', Precision(), Recall()]
+        )
+
+        return model
+    except Exception as e:
+        st.error(f"Error in load_xception_model: {str(e)}")
+        return None
 
 
 st.title("Brain Tumor Classification")
@@ -248,6 +259,12 @@ if uploaded_file is not None:
         model = load_model('cnn_model.h5', compile=False)  # Try without compilation first
         if model is None:
             raise Exception("Failed to load CNN model")
+        # Compile the model after loading
+        model.compile(
+            optimizer=Adamax(learning_rate=0.001),
+            loss='categorical_crossentropy',
+            metrics=['accuracy', Precision(), Recall()]
+        )
         img_size = (224,224)
     except Exception as e:
         st.error(f"Error loading CNN model: {str(e)}")
