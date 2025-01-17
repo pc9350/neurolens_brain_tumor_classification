@@ -27,10 +27,34 @@ def download_models():
     }
     
     for model_name, file_id in models.items():
-        if not os.path.exists(model_name):
-            print(f"Downloading {model_name}...")
-            url = f'https://drive.google.com/uc?id={file_id}'
-            gdown.download(url, model_name, quiet=False)
+        try:
+            if not os.path.exists(model_name):
+                print(f"Downloading {model_name}...")
+                url = f'https://drive.google.com/uc?id={file_id}'
+                output = gdown.download(url, model_name, quiet=False)
+                if output is None:
+                    raise Exception(f"Failed to download {model_name}")
+                print(f"Successfully downloaded {model_name}")
+            
+            # Verify file exists and has content
+            if not os.path.exists(model_name):
+                raise Exception(f"File {model_name} not found after download")
+            
+            if os.path.getsize(model_name) == 0:
+                raise Exception(f"File {model_name} is empty")
+                
+            print(f"Verified {model_name} exists and has content")
+            
+        except Exception as e:
+            st.error(f"Error downloading {model_name}: {str(e)}")
+            return False
+    
+    return True
+
+# Add this at the start of your app
+if not download_models():
+    st.error("Failed to download required model files")
+    st.stop()
 
 # Call this function at app startup
 download_models()
@@ -211,11 +235,23 @@ if uploaded_file is not None:
   )
 
   if selected_model == "Transfer Learning - Xception":
-    model = load_xception_model('xception_model.weights.h5')
-    img_size = (299,299)
+    try:
+        model = load_xception_model('xception_model.weights.h5')
+        if model is None:
+            raise Exception("Failed to load Xception model")
+        img_size = (299,299)
+    except Exception as e:
+        st.error(f"Error loading Xception model: {str(e)}")
+        st.stop()
   else:
-    model = load_model('cnn_model.h5')
-    img_size = (224,224)
+    try:
+        model = load_model('cnn_model.h5', compile=False)  # Try without compilation first
+        if model is None:
+            raise Exception("Failed to load CNN model")
+        img_size = (224,224)
+    except Exception as e:
+        st.error(f"Error loading CNN model: {str(e)}")
+        st.stop()
 
 
   labels = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
