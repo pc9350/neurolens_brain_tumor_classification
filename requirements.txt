@@ -1,4 +1,4 @@
-streamlit
+streamlit>=1.31.0
 tensorflow-cpu
 numpy
 pandas
@@ -9,3 +9,5 @@ seaborn
 plotly
 scikit-learn
 google-generativeai
+python-dotenv
+gdown

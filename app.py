@@ -14,10 +14,26 @@ import google.generativeai as genai
 # from google.colab import userdata
 import PIL.Image
 import os
+import gdown
 from dotenv import load_dotenv
 load_dotenv()
 
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+
+def download_models():
+    models = {
+        'xception_model.weights.h5': '1uoFAA99IZkR-47OH_6_Laoeiv8Jot7T6',
+        'cnn_model.h5': '1ZdEE9YIXHZ16y19RxwCJlt139ZHtkNr3'
+    }
+    
+    for model_name, file_id in models.items():
+        if not os.path.exists(model_name):
+            print(f"Downloading {model_name}...")
+            url = f'https://drive.google.com/uc?id={file_id}'
+            gdown.download(url, model_name, quiet=False)
+
+# Call this function at app startup
+download_models()
 
 output_dir = 'saliency_maps'
 os.makedirs(output_dir, exist_ok=True)
